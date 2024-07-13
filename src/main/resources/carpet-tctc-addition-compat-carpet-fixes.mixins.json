@@ -5,8 +5,7 @@
   "plugin": "top.catowncraft.carpettctcaddition.compat.CompatMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "rule.enderPlatform.MixinServerPlayer",
-    "rule.updateSuppressionCrashFix.MixinMinecraftServer"
+    "rule.enderPlatform.MixinServerPlayer"
   ],
   "injectors": {
     "defaultRequire": 1

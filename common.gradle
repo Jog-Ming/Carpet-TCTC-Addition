@@ -13,7 +13,6 @@ int mcVersion = 1
 
 preprocess {
     mcVersion = vars.get().get("MC")
-    tabIndentation.set(false)
 }
 
 repositories {
@@ -62,6 +61,7 @@ dependencies {
     // Annotation processor
     modCompileOnly("org.projectlombok:lombok:${project.lombok_version}")
     annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
+    include(annotationProcessor(implementation("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}")))
 
     // Dependency
     modImplementation("top.hendrixshen.magiclib:magiclib-${project.minecraft_version.replace(".", "_")}:${project.magiclib_version}") {

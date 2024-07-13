@@ -6,36 +6,34 @@
  */
 package top.catowncraft.carpettctcaddition.mixin.rule.updateSuppressionCrashFix;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import top.catowncraft.carpettctcaddition.CarpetTCTCAdditionExtension;
 import top.catowncraft.carpettctcaddition.CarpetTCTCAdditionSettings;
-import top.catowncraft.carpettctcaddition.compat.GeneralPredicate;
 import top.catowncraft.carpettctcaddition.helper.UpdateSuppressionException;
 import top.catowncraft.carpettctcaddition.util.StringUtil;
 import top.hendrixshen.magiclib.compat.minecraft.api.network.chat.ComponentCompatApi;
-import top.hendrixshen.magiclib.dependency.api.annotation.Dependencies;
 import top.hendrixshen.magiclib.util.MessageUtil;
 
 import java.util.function.BooleanSupplier;
 
-@Dependencies(predicate = GeneralPredicate.shouldUseCompatForUpdateSuppressionCrashFix.class)
 @Mixin(MinecraftServer.class)
 public class MixinMinecraftServer {
-    @Redirect(
+    @WrapOperation(
             method = "tickChildren",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;tick(Ljava/util/function/BooleanSupplier;)V"
             )
     )
-    private void onTickingWorld(ServerLevel instance, BooleanSupplier booleanSupplier) {
+    private void onTickingWorld(ServerLevel instance, BooleanSupplier booleanSupplier, Operation<Void> original) {
         try {
-            instance.tick(booleanSupplier);
+            original.call(instance, booleanSupplier);
         } catch (Throwable throwable) {
             if (!CarpetTCTCAdditionSettings.updateSuppressionCrashFix ||
                     !(throwable.getCause() instanceof UpdateSuppressionException || throwable instanceof UpdateSuppressionException)) {
